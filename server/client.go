@@ -65,25 +65,17 @@ func (c *Client) writePump() {
 	defer func() {
 		c.conn.Close()
 	}()
-	for {
-		select {
-		case message, ok := <-c.send:
-			if !ok {
-				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
-				return
-			}
+	for message := range c.send {
+		var msg Message
+		err := json.Unmarshal(message, &msg)
+		if err != nil {
+			log.Println("json.Unmarshal:", err)
+			return
+		}
 
-			var msg Message
-			err := json.Unmarshal(message, &msg) // Membaca pesan dari format JSON
-			if err != nil {
-				log.Println("json.Unmarshal:", err)
-				return
-			}
-
-			if err := c.conn.WriteJSON(msg); err != nil {
-				log.Println("write:", err)
-				return
-			}
+		if err := c.conn.WriteJSON(msg); err != nil {
+			log.Println("write:", err)
+			return
 		}
 	}
 }
