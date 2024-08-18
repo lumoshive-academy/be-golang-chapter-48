@@ -14,7 +14,6 @@ type Client struct {
 	send chan []byte
 }
 
-// Message adalah struktur yang akan digunakan untuk membaca dan menulis data JSON
 type Message struct {
 	Username string `json:"username"`
 	Message  string `json:"message"`
