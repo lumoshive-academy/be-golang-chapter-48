@@ -11,8 +11,9 @@ func main() {
 	go hub.Run()
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "templates/index.html")
+		http.ServeFile(w, r, "client/index.html")
 	})
+
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		server.ServeWs(hub, w, r)
 	})
